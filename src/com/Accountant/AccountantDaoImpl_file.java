@@ -42,7 +42,7 @@ public class AccountantDaoImpl_file implements AccountantDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	public int addAcoountant(Accountant a) {
 		ArrayList<Accountant> accountants = new ArrayList<>();
 		int status = 0;
@@ -62,7 +62,6 @@ public class AccountantDaoImpl_file implements AccountantDao {
 		return status;
 	}
 
-	@Override
 	public ArrayList viewAccountant() {
 		ArrayList<Accountant> accountants = new ArrayList<>();
 
