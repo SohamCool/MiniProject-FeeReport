@@ -18,8 +18,9 @@ import com.Student.StudentDaoImpl;
 public class FeeReport {
 	public static int ans = 0;
 	static Scanner sc = new Scanner(System.in);
-	AccountantDaoImpl obj=new AccountantDaoImpl();
-	AccountantDaoImpl_file objf=new AccountantDaoImpl_file();
+	AccountantDao obj=new AccountantDaoImpl();
+	AccountantDao objf=new AccountantDaoImpl_file();
+	Accountant a = new Accountant();
 
 
 	public static void main(String[] args) {
@@ -89,7 +90,8 @@ public class FeeReport {
 		}
 	}
 	public void adminSection() {
-		int id = 1, s;
+		int id = 1;
+		boolean s;
 		String name, pwd, email, phone;
 		ArrayList<Accountant> accountants = new ArrayList<>();
 		System.out.println("============ Admin Section ============");
@@ -106,13 +108,17 @@ public class FeeReport {
 			email = sc.next();
 			System.out.println("Enter Contact No: ");
 			phone = sc.next();
-			Accountant a = new Accountant(id, name, pwd, email, phone);
+		//	Accountant a = new Accountant(id, name, pwd, email, phone);
+			a.setName(name);
+			a.setPwd(pwd);
+			a.setEmail(email);
+			a.setPhone(phone);
 			if (ans == 1)
 				s = objf.addAccountant(a);
 			else
 				s = obj.addAccountant(a);
 
-			if (s > 0)
+			if (s==true)
 				System.out.println(name + "'s data is added to the database successfully...\n");
 			else
 				System.out.println("Unable to add this data to the database!\n");

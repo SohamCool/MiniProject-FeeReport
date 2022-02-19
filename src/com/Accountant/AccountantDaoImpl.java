@@ -92,7 +92,7 @@ public class AccountantDaoImpl implements AccountantDao{
 //	}
 
 	@Override
-	public int addAccountant(Accountant a) {
+	public boolean addAccountant(Accountant a) {
 		int status = 0;
 		try {
 			con = getCon();
@@ -106,7 +106,9 @@ public class AccountantDaoImpl implements AccountantDao{
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return status;
+		if(status > 0)
+			return true;
+		return false;
 	}
 
 	@Override
