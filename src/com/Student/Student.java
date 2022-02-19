@@ -1,6 +1,9 @@
 package com.Student;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
+	private static final long serialVersionUID = 611853102785260869L;
 	String name,email,course,address,city,state,country,contactno;
 	int id, fee,paid,due;
 	public Student(int id, String name, String email, String course, int fee, int paid, int due, String address, String city, String state, String country,
@@ -19,9 +22,8 @@ public class Student {
 		this.country = country;
 		this.contactno = contactno;
 	}
-	public Student() {
-		// TODO Auto-generated constructor stub
-	}
+	public Student() {}
+	
 	public int getId() {
 		return id;
 	}

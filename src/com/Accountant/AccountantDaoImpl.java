@@ -16,8 +16,8 @@ public class AccountantDaoImpl implements AccountantDao{
 	static PreparedStatement pt = null;
 	static ResultSet rs = null;
 	
-//	@Override
-	public Connection getCon() {
+	
+	public static Connection getCon() {
 		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -63,33 +63,13 @@ public class AccountantDaoImpl implements AccountantDao{
 				a.setPhone(rs.getString(5));
 				accountants.add(a);
 			}
+			con.close();
 		}catch(Exception e) {
 		System.out.println(e);
 		}
 		return accountants;
 	}
-//		ListIterator<Accountant> itr = accountants.listIterator();
-//		while(itr.hasNext()) {
-//			Accountant accdetails = itr.next();
-//			System.out.println("\nID: "+accdetails.getId()+"\nName: "+accdetails.getName()+"\nPassword: "+accdetails.getPwd()+"\nEmail: "+accdetails.getEmail()+"\nContact No: "+accdetails.getPhone()+"\n");
-//		}
 
-//	}
-//	public int accountantLogin(String name, String pwd) {
-//		int status=0;
-//		try {
-//			con = getCon();
-//			pt = con.prepareStatement("select * from Accountant where Name = ? and Password = ?");
-//			pt.setString(1, name);
-//			pt.setString(2, pwd);
-//			rs =pt.executeQuery();
-//			if(rs.next())
-//				++status;
-//			else
-//				--status;
-//		}catch(Exception e) {System.out.println(e);}
-//		return status;
-//	}
 
 	@Override
 	public boolean addAccountant(Accountant a) {
@@ -124,6 +104,7 @@ public class AccountantDaoImpl implements AccountantDao{
 				status= true;
 			else
 				status= false;
+			con.close();
 		}catch(Exception e) {System.out.println(e);}
 		return status;
 	}

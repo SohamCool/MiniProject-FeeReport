@@ -5,7 +5,10 @@ import java.util.ArrayList;
 
 
 public interface AccountantDao {
-	public Connection getCon();
+//	public static Connection getCon() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	public boolean addAccountant(Accountant a);
 	public ArrayList<Accountant> viewAccountant();
 	public boolean accountantLogin(String uname, String pwd);

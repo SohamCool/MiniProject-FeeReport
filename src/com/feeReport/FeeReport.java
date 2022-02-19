@@ -13,14 +13,19 @@ import com.Accountant.AccountantSection;
 import com.Admin.AdminLogin;
 import com.Admin.AdminSection;
 import com.Student.Student;
+import com.Student.StudentDao;
 import com.Student.StudentDaoImpl;
+import com.Student.StudentDaoImpl_file;
 
 public class FeeReport {
 	public static int ans = 0;
 	static Scanner sc = new Scanner(System.in);
 	AccountantDao obj=new AccountantDaoImpl();
 	AccountantDao objf=new AccountantDaoImpl_file();
+	StudentDao sobj = new StudentDaoImpl();
+	StudentDao sobjf = new StudentDaoImpl_file();
 	Accountant a = new Accountant();
+	Student s = new Student();
 
 
 	public static void main(String[] args) {
@@ -145,26 +150,36 @@ public class FeeReport {
 		}
 	}
 
-	public static void accountantSection() {
-		int ch, status;
+	public void accountantSection() {
+		int ch;
+		boolean b;
+		ArrayList<Student> students = new ArrayList<>();
 		System.out.println("========== Accountant Section =========");
-		System.out.println(
-				"\n1. Add Student\n2. View Students\n3. Edit Student\n4. Due Fee List\n5. Remove Student\n6. Logout\n");
+		System.out.println("\n1. Add Student\n2. View Students\n3. Edit Student\n4. Due Fee List\n5. Remove Student\n6. Logout\n");
 		ch = sc.nextInt();
 		switch (ch) {
-		case 1:
-			status = StudentDaoImpl.addStudent();
-			if (status > 0)
+		case 1:		System.out.println("\n------------ Add Student ------------\n");
+					s=getStudentData();
+			if(ans == 1) 
+				b = sobjf.addStudent(s); 
+			else
+				b = sobj.addStudent(s);
+			if (b == true)
 				System.out.println("Students data added to the database successfully...\n");
-
 			else
 				System.out.println("Unable to add Student's data to the database! \n");
 			accountantSection();
 			break;
 
 		case 2:
-			StudentDaoImpl.viewStudent();
+			if(ans == 1) 
+				students = sobjf.viewStudent(); 
+			else
+				students = sobj.viewStudent();
 			System.out.println("\n");
+			System.out.println("\n-------------- Student List --------------\n");
+			printData(students);
+			System.out.println();
 			accountantSection();
 			break;
 
@@ -172,12 +187,24 @@ public class FeeReport {
 			System.out.println("\n---------- Search Student Details -----------\n");
 			System.out.println("Enter Student ID to edit details: ");
 			int id = sc.nextInt();
-			StudentDaoImpl.getStudentById(id);
+			s = sobjf.getStudentById(id);
+			Student s1 = new Student();
+			if(ans == 1) {
+				Student s = getStudentData();
 			System.out.println("\n------------ Update Student Details ------------\n");
-			Student s1 = FeeReport.getStudentData();
+		//	Student s1 = getStudentData();
 			s1.setId(id);
-			status = StudentDaoImpl.editStudent(s1);
-			if (status > 0)
+			b = sobjf.editStudent(s1);
+			}
+			else {
+				s = sobj.getStudentById(id);
+				System.out.println("\n------------ Update Student Details ------------\n");
+			//	Student s1 = getStudentData();
+				s1.setId(id);
+				b = sobj.editStudent(s1);
+			}
+			
+			if (b == true)
 				System.out.println(s1.getName() + "'s data updated to the database successfully...\n");
 
 			else
@@ -186,7 +213,14 @@ public class FeeReport {
 			break;
 
 		case 4:
-			StudentDaoImpl.getDueList();
+			if(ans == 1) {
+				students = sobjf.getDueList();
+				printData(students);
+			}
+			else {
+				students = sobj.getDueList();
+				printData(students);
+			}
 			accountantSection();
 			break;
 
@@ -194,8 +228,13 @@ public class FeeReport {
 			System.out.println("\n------------ Remove Student ------------\n");
 			System.out.println("Enter Student ID to remove details: ");
 			int id1 = sc.nextInt();
-			status = StudentDaoImpl.removeStudent(id1);
-			if(status>0) 
+			if(ans == 1) {
+				b = sobjf.removeStudent(id1);
+			}else {
+				b = sobj.removeStudent(id1);
+			}
+			
+			if(b == true) 
 				System.out.println("\nRemoved Successfully...\n");
 			else
 				System.out.println("\nFailed to remove Student!\n");
@@ -241,7 +280,7 @@ public class FeeReport {
 		return s;
 	}
 
-	public static void printData(ArrayList students, Student s) {
+	public static void printData(ArrayList students) {
 		// ArrayList<Student> students = new ArrayList<>();
 		ListIterator<Student> li = students.listIterator();
 		String[] cols = new String[] { "ID", "Name", "Email", "Course", "Fee", "Paid", "Due", "Address", "City",

@@ -9,53 +9,22 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 import com.Accountant.AccountantDao;
+import com.Accountant.AccountantDaoImpl;
 import com.Accountant.AccountantSection;
 import com.feeReport.FeeReport;
 
-public class StudentDaoImpl {
+public class StudentDaoImpl implements StudentDao {
 	static Connection con = null;
 	static PreparedStatement pt = null;
 	static ResultSet rs = null;
 	static Scanner sc = new Scanner(System.in);
+	static boolean b= false;
 
-//	public static Student getStudentData() {
-//		int id = 0,due,paid,fee;
-//		String name,email,course,address,city,state,country,phoneno;
-//		System.out.println("Name: ");
-//		name = sc.next();
-//		System.out.println("Email: ");
-//		email = sc.next();
-//		System.out.println("Course: ");
-//		course = sc.next();
-//		System.out.println("Fee: ");
-//		fee = sc.nextInt();
-//		System.out.println("Paid: ");
-//		paid = sc.nextInt();
-//		System.out.println("Due: ");
-//		due = fee-paid;
-//		sc.nextLine();
-//		System.out.println(due);
-//		System.out.println("Address: ");
-//		address = sc.nextLine();
-//		System.out.println("City: ");
-//		city = sc.next();
-//		System.out.println("State: ");
-//		state = sc.next();
-//		System.out.println("Country: ");
-//		country = sc.next();
-//		System.out.println("Contact No: ");
-//		phoneno = sc.next();
-//		Student s = new Student(id, name, email, course, fee, paid, due, address, city, state, country, phoneno);
-//	//	addStudent(s);
-//		return s;
-//	}
-		
-	public static int addStudent() {
-		System.out.println("\n------------ Add Student ------------\n");
-		Student s = FeeReport.getStudentData();
+	@Override	
+	public boolean addStudent(Student s) {
 		int status=0;
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 			pt = con.prepareStatement("insert into Student(Name, Email, Course, Fee, Paid, Due, Address, City, State, Country, Contactno) values(?,?,?,?,?,?,?,?,?,?,?)");
 			pt.setString(1, s.getName());
 			pt.setString(2, s.getEmail());
@@ -71,8 +40,11 @@ public class StudentDaoImpl {
 			status= pt.executeUpdate();
 			con.close();
 		} catch (SQLException e) {
-			System.out.println(e);		}
-		return status;
+			System.out.println(e);	
+			}
+		if(status>0)
+			b=true;
+		return b;
 //		if(status>0) 
 //			System.out.println(s.getName()+"'s data added to the database successfully...\n");
 //		
@@ -82,11 +54,12 @@ public class StudentDaoImpl {
 
 	}
 	
-	public static void viewStudent() {
+	@Override
+	public ArrayList<Student> viewStudent() {
 		ArrayList<Student> students = new ArrayList<>();
 		Student s=null;
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 			pt = con.prepareStatement("select * from Student");
 			rs = pt.executeQuery();
 			while(rs.next()) {
@@ -108,9 +81,10 @@ public class StudentDaoImpl {
 			
 		}catch(Exception e) {System.out.println(e);}
 		
-		ListIterator<Student> li = students.listIterator();
-		System.out.println("\n-------------- Student List --------------\n");
-		FeeReport.printData(students, s);
+		return students;
+		//ListIterator<Student> li = students.listIterator();
+//		System.out.println("\n-------------- Student List --------------\n");
+//		FeeReport.printData(students, s);
 //		String[] cols = new String[]{"ID", "Name", "Email", "Course", "Fee", "Paid", "Due", "Address", "City", "State", "Country", "Contactno"};
 //		System.out.println();
 //		System.out.printf("%-5s%-10s%-23s%-10s%-10s%-10s%-10s%-15s%-10s%-15s%-15s%-10s%n",cols[0],cols[1],cols[2],cols[3],cols[4],cols[5],cols[6],cols[7],cols[8],cols[9],cols[10],cols[11]);
@@ -122,15 +96,16 @@ public class StudentDaoImpl {
 //	AccountantSection.main(new String[] {});
 	}
 	
-	public static void getStudentById(int id) {
-		ArrayList<Student> students = new ArrayList<>();
+	@Override
+	public Student getStudentById(int id) {
+//		ArrayList<Student> students = new ArrayList<>();
 //		System.out.println("\n---------- Search Student Details -----------\n");
 //		System.out.println("Enter Student ID to edit details: ");
 //		int id=sc.nextInt();
 		Student s = new Student();
 
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 			pt = con.prepareStatement("select * from Student where ID=?");
 			pt.setInt(1, id);
 			rs=pt.executeQuery();
@@ -147,13 +122,14 @@ public class StudentDaoImpl {
 				s.setState(rs.getString(10));
 				s.setCountry(rs.getString(11));
 				s.setContactno(rs.getString(12));
-				students.add(s);
+			//	students.add(s);
 				//con.close();
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		FeeReport.printData(students, s);
+		return s;
+		//FeeReport.printData(students, s);
 
 		
 //		System.out.println("\n------------ Update Student Details ------------\n");
@@ -162,10 +138,12 @@ public class StudentDaoImpl {
 //		
 //		editStudent(s1);
 	}
-	public static int editStudent(Student s1) {
+	
+	@Override
+	public boolean editStudent(Student s1) {
 		int status = 0;
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 	//		pt1 = con.prepareStatement("select * f)
 			pt = con.prepareStatement("update Student set Name=?,Email=?,Course=?,Fee=?,Paid=?,Due=?,Address=?,City=?,State=?,Country=?,Contactno=? where ID=?");
 				pt.setString(1,s1.getName());
@@ -186,21 +164,18 @@ public class StudentDaoImpl {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-//		if(status>0) 
-//			System.out.println(s1.getName()+"'s data updated to the database successfully...\n");
-//		
-//		else 
-//			System.out.println("Unable to update "+s1.getName()+"'s data to the database! \n");
-//		AccountantSection.main(new String[] {});
-		return status;
+		if(status>0) 
+			b=true;
+		return b;
 	}
 	
-	public static void getDueList() {
+	@Override
+	public ArrayList<Student> getDueList() {
 		ArrayList<Student> students = new ArrayList<>();
 		int status =0;
 		Student s = null;
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 			pt = con.prepareStatement("select * from Student where Due>0");
 			rs = pt.executeQuery();
 			while(rs.next()) {
@@ -222,25 +197,24 @@ public class StudentDaoImpl {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		FeeReport.printData(students,s);
+		return students;
 	}
 	
-	public static int removeStudent(int id) {
+	@Override
+	public boolean removeStudent(int id) {
 		int status=0;
 //		System.out.println("\n------------ Remove Student ------------\n");
 //		System.out.println("Enter Student ID to remove details: ");
 //		int id = sc.nextInt();
 		try {
-			con = AccountantDao.getCon();
+			con = AccountantDaoImpl.getCon();
 			pt = con.prepareStatement("delete from Student where ID=?");
 			pt.setInt(1, id);
 			status =pt.executeUpdate();
 		}catch(Exception e) {System.out.println(e);}
-		return status;
-//		if(status>0) 
-//			System.out.println("\nRemoved Successfully...\n");
-//		else
-//			System.out.println("\nFailed to remove Student!\n");
+		if(status>0) 
+			b = true;
+		return b;
 //		AccountantSection.main(new String[] {});
 
 	}

@@ -18,65 +18,18 @@ public class AccountantDaoImpl_file implements AccountantDao {
 	ObjectOutputStream oos = null;
 	ObjectInputStream ois = null;
 	ListIterator li = null;
-	File file = new File("acc.txt");
+	File file = new File("acc.ser");
 
 	ArrayList<Accountant> accountants = new ArrayList<Accountant>();
 	
 	
-	@Override
-	public Connection getCon() {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
 	
-//	@Override
-//	public int addAcoountant(Accountant a) {
-		//ArrayList<Accountant> accountants = new ArrayList<>();
-//		int status = 0;
-//		System.out.println(a.getName());
-//		File f = new File("Accountant.txt");
-//		System.out.println(f.exists());
 
-//		try {
-//			oos = new ObjectOutputStream(new FileOutputStream("Accountant.txt"));
-//			oos.writeObject(a);
-//			accountants.add(a);
-//		//	File f = new File("Accountant.txt");
-////			if(!f.exists()) 
-////				f.createNewFile();
-//			System.out.println(f.exists());
-//			oos = new ObjectOutputStream(new FileOutputStream("Accountant.txt"));
-//			oos.writeObject(a);
-//			System.out.println("Data added to file");
-//			status=1;
-//			oos.close();
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//		return status;
-//	}
-
-//	public ArrayList viewAccountant() {
-//		ArrayList<Accountant> accountants = new ArrayList<>();
-//
-//		try {
-//			ois = new ObjectInputStream(new FileInputStream(file));
-//			accountants = (ArrayList<Accountant>)ois.readObject();
-//			ois.close();
-//		} catch (Exception e) {
-//			System.out.println(e);
-//		}
-//		return accountants;
-//	}
-//last option to change return type int to boolean
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addAccountant(Accountant a) {
 		boolean status=false;
-//		System.out.println("inadd accountant");
-//		System.out.println(a.getName());
-		
+
 		try {
 			if(file.exists()==false)
 				file.createNewFile();
@@ -86,7 +39,7 @@ public class AccountantDaoImpl_file implements AccountantDao {
 			ois.close();
 			accountants.add(a);
 			oos = new ObjectOutputStream(new FileOutputStream(file));
-			oos.writeObject(a);
+			oos.writeObject(accountants);
 			oos.close();
 			status = true;
 		} catch (Exception e) {
@@ -111,38 +64,23 @@ public class AccountantDaoImpl_file implements AccountantDao {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println(e);
 		}
 		return s;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Accountant> viewAccountant() {
-	//	ArrayList<Accountant> accountants = new ArrayList<Accountant>();
-		
+	public ArrayList<Accountant> viewAccountant() {		
 				try {
 					accountants.clear();	
 					ois = new ObjectInputStream(new FileInputStream(file));
 					accountants = (ArrayList<Accountant>)ois.readObject();
-//					a = (Accountant)ois.readObject();
 					ois.close();
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-			//	return accountants;
 				return accountants;
 	}
-
-//	public static void main(String[] args) {
-//		AccountantDaoImpl_file fobj = new AccountantDaoImpl_file();
-//		Accountant a = new Accountant();
-//		a.setName("abc");
-//		a.setEmail("abcgmail");
-//		a.setPwd("abc");
-//		a.setPhone("9898989898");
-//		fobj.addAccountant(a);
-//		System.out.println("end");
-//	}		
 
 }

@@ -3,6 +3,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Accountant implements Serializable {
+	private static final long serialVersionUID = 611853102785260869L;
 private int id;
 private String name,pwd,email,phone;
 public Accountant(){}
