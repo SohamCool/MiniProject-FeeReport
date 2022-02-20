@@ -20,14 +20,19 @@ public class StudentDaoImpl_file implements StudentDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addStudent(Student s) {
-		int id;
+		int id = 0;
 		try {
 			if(!file.exists())
 				file.createNewFile();
 			students.clear();
 			ois = new ObjectInputStream(new FileInputStream(file));
 			students = (ArrayList<Student>)ois.readObject();
+			for(Student s1 : students) {
+				id =s1.getId();
+				id+=1;
+			}
 			ois.close();
+			s.setId(id);
 			students.add(s);
 			oos = new ObjectOutputStream(new FileOutputStream(file));
 			oos.writeObject(students);
@@ -55,29 +60,39 @@ public class StudentDaoImpl_file implements StudentDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public Student getStudentById(int id) {
+		Student s1 = new Student();
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
 			students = (ArrayList<Student>)ois.readObject();
-			ListIterator<Student> li = students.listIterator();
-			while(li.hasNext()) {
-				Student s1 = (Student)li.next();
-				if(s1.getId() == id) {
-					s = s1;
+			for(Student s: students) {
+				if(s.getId() == id) {
+					s1.setId(s.getId());
+					s1.setName(s.getName());
+					s1.setEmail(s.getEmail());
+					s1.setCourse(s.getCourse());
+					s1.setFee(s.getFee());
+					s1.setPaid(s.getPaid());
+					s1.setDue(s.getDue());
+					s1.setAddress(s.getAddress());
+					s1.setCity(s.getCity());
+					s1.setState(s.getState());
+					s1.setCountry(s.getCountry());
 				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return s;
+		return s1;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean editStudent(Student s1) {
+	public boolean editStudent(Student s) {
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
 			students = (ArrayList<Student>)ois.readObject();
-			for(Student s:students) {
-				if(s.getId() == s1.getId()) {
+			for(Student s1:students) {
+				if(s1.getId() == s.getId()) {
 					s.setName(s1.getName());
 					s.setEmail(s1.getEmail());
 					s.setCourse(s1.getCourse());
@@ -101,13 +116,18 @@ public class StudentDaoImpl_file implements StudentDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Student> getDueList() {
+		ArrayList<Student> li = new ArrayList<>();
 		try {
 			ois = new ObjectInputStream(new FileInputStream(file));
 			students = (ArrayList<Student>)ois.readObject();
-	
+			for(Student s : students) {
+				if(s.getDue()>0) {
+					li.add(s);
+				}
+			}
 		} catch (Exception e) {
 		}
-		return students;
+		return li;
 	}
 
 	@Override

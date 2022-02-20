@@ -187,19 +187,22 @@ public class FeeReport {
 			System.out.println("\n---------- Search Student Details -----------\n");
 			System.out.println("Enter Student ID to edit details: ");
 			int id = sc.nextInt();
-			s = sobjf.getStudentById(id);
+//			s = sobjf.getStudentById(id);
 			Student s1 = new Student();
 			if(ans == 1) {
-				Student s = getStudentData();
+				s = sobjf.getStudentById(id);
+				System.out.println("\nID: "+s.getId()+"\nName: "+s.getName()+"\nEmail: "+s.getEmail()+"\nCourse: "+s.getCourse()+"\nFee: "+s.getFee()+"\nPaid: "+s.getPaid()+"\nDue: "+s.getDue()+"\nAddress: "+s.getAddress()+"\nCity: "+s.getCity()+"\nState: "+s.getState()+"\nCountry: "+s.getCountry()+"\n");
 			System.out.println("\n------------ Update Student Details ------------\n");
-		//	Student s1 = getStudentData();
+			s1 = getStudentData();
 			s1.setId(id);
 			b = sobjf.editStudent(s1);
 			}
 			else {
 				s = sobj.getStudentById(id);
+				System.out.println("\nID: "+s.getId()+"\nName: "+s.getName()+"\nEmail: "+s.getEmail()+"\nCourse: "+s.getCourse()+"\nFee: "+s.getFee()+"\nPaid: "+s.getPaid()+"\nDue: "+s.getDue()+"\nAddress: "+s.getAddress()+"\nCity: "+s.getCity()+"\nState: "+s.getState()+"\nCountry: "+s.getCountry()+"\n");
+
 				System.out.println("\n------------ Update Student Details ------------\n");
-			//	Student s1 = getStudentData();
+				s1 = getStudentData();
 				s1.setId(id);
 				b = sobj.editStudent(s1);
 			}
