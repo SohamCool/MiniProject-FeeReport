@@ -89,23 +89,30 @@ public class StudentDaoImpl_file implements StudentDao{
 					s.setState(s1.getState());
 					s.setCountry(s1.getCountry());
 					s.setContactno(s1.getContactno());
+					b = true;
 				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return false;
+		return b;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Student> getDueList() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(file));
+			students = (ArrayList<Student>)ois.readObject();
+	
+		} catch (Exception e) {
+		}
+		return students;
 	}
 
 	@Override
 	public boolean removeStudent(int id) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
