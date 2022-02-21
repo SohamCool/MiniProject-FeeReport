@@ -1,12 +1,15 @@
 package com.Student;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 public class StudentDaoImpl_file implements StudentDao{
 	Student s = new Student();
@@ -84,34 +87,41 @@ public class StudentDaoImpl_file implements StudentDao{
 		}
 		return s1;
 	}
+	
 
+
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean editStudent(Student s) {
+		boolean checked= true;
+		File tempfile = new File("stud1.ser");
+		Student s1 = new Student();
 		try {
-			ois = new ObjectInputStream(new FileInputStream(file));
-			students = (ArrayList<Student>)ois.readObject();
-			for(Student s1:students) {
-				if(s1.getId() == s.getId()) {
-					s.setName(s1.getName());
-					s.setEmail(s1.getEmail());
-					s.setCourse(s1.getCourse());
-					s.setFee(s1.getFee());
-					s.setPaid(s1.getPaid());
-					s.setDue(s1.getDue());
-					s.setAddress(s1.getAddress());
-					s.setCity(s1.getCity());
-					s.setState(s1.getState());
-					s.setCountry(s1.getCountry());
-					s.setContactno(s1.getContactno());
-					b = true;
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempfile));
+			Scanner sc = new Scanner(file);
+			Scanner sc1 = new Scanner(tempfile);
+			while(sc.hasNext()) {
+				String currentLine = sc.nextLine();
+				int id =2;
+				String[] tokens = currentLine.split(" ");
+				if(Integer.valueOf(tokens[0])==id && checked) {
+					currentLine = tokens[0]+" "+s.getName()+" "+s.getEmail()+" "+s.getCourse()+" "+s.getFee()+" "+s.getPaid()+" "+s.getDue()+" "+s.getAddress()+" "+s.getCity()+" "+s.getState()+" "+s.getCountry()+" "+s.getContactno();
 				}
+				writer.write(currentLine + System.getProperty("line.Seperator"));
+				writer.close();
+				sc.close();
+				file.delete();
+				b = tempfile.renameTo(file);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return b;
 	}
+
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
