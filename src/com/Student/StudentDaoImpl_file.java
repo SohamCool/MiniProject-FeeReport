@@ -91,35 +91,67 @@ public class StudentDaoImpl_file implements StudentDao{
 
 
 	
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public boolean editStudent(Student s) {
+//		boolean checked= true;
+//		File tempfile = new File("stud1.ser");
+//		Student s1 = new Student();
+//		try {
+//			BufferedWriter writer = new BufferedWriter(new FileWriter(tempfile));
+//			Scanner sc = new Scanner(file);
+//			Scanner sc1 = new Scanner(tempfile);
+//			while(sc.hasNext()) {
+//				String currentLine = sc.nextLine();
+//				int id =2;
+//				String[] tokens = currentLine.split(" ");
+//				if(Integer.valueOf(tokens[0])==id && checked) {
+//					currentLine = tokens[0]+" "+s.getName()+" "+s.getEmail()+" "+s.getCourse()+" "+s.getFee()+" "+s.getPaid()+" "+s.getDue()+" "+s.getAddress()+" "+s.getCity()+" "+s.getState()+" "+s.getCountry()+" "+s.getContactno();
+//				}
+//				writer.write(currentLine + System.getProperty("line.Seperator"));
+//				writer.close();
+//				sc.close();
+//				file.delete();
+//				b = tempfile.renameTo(file);
+//			}
+//		} catch (Exception e) {
+//			System.out.println(e);
+//		}
+//		return b;
+//	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean editStudent(Student s) {
 		boolean checked= true;
 		File tempfile = new File("stud1.ser");
-		Student s1 = new Student();
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(tempfile));
-			Scanner sc = new Scanner(file);
-			Scanner sc1 = new Scanner(tempfile);
-			while(sc.hasNext()) {
-				String currentLine = sc.nextLine();
-				int id =2;
-				String[] tokens = currentLine.split(" ");
-				if(Integer.valueOf(tokens[0])==id && checked) {
-					currentLine = tokens[0]+" "+s.getName()+" "+s.getEmail()+" "+s.getCourse()+" "+s.getFee()+" "+s.getPaid()+" "+s.getDue()+" "+s.getAddress()+" "+s.getCity()+" "+s.getState()+" "+s.getCountry()+" "+s.getContactno();
+			oos = new ObjectOutputStream(new FileOutputStream(tempfile));
+			ois = new ObjectInputStream(new FileInputStream(file));
+			students = (ArrayList<Student>)ois.readObject();
+			
+			for(Student s1 : students) {
+				
+				String[] data = new String[] { Integer.toString(s1.getId()), s1.getName(), s1.getEmail(), s1.getCourse(), Integer.toString(s1.getFee()), Integer.toString(s1.getPaid()), Integer.toString(s1.getDue()), s1.getAddress(), s1.getCity(),
+						s1.getState(), s1.getCountry(), s1.getContactno() };
+				for(int i=0;i<12;i++) {
+					String currentLine = data[i];
+					String[] tokens = currentLine.split(" ");
+					if(Integer.valueOf(tokens[0])==s.getId() && checked) {
+						currentLine = tokens[0]+" "+s.getName()+" "+s.getEmail()+" "+s.getCourse()+" "+s.getFee()+" "+s.getPaid()+" "+s.getDue()+" "+s.getAddress()+" "+s.getCity()+" "+s.getState()+" "+s.getCountry()+" "+s.getContactno();
+					}
+					oos.writeObject(currentLine + System.getProperty("line.Seperator"));
+					oos.close();
+					ois.close();
+					file.delete();
+					b = tempfile.renameTo(file);
 				}
-				writer.write(currentLine + System.getProperty("line.Seperator"));
-				writer.close();
-				sc.close();
-				file.delete();
-				b = tempfile.renameTo(file);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return b;
 	}
-
 	
 	
 
